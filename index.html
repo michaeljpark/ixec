@@ -375,6 +375,7 @@
         }
 
         .tab {
+            flex: 1;
             padding: 0.5rem 1.5rem;
             border-radius: 50px;
             font-size: 0.875rem;
@@ -464,7 +465,7 @@
         .card-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
         }
 
         .tag {
@@ -707,6 +708,10 @@
                 justify-content: center !important;
             }
 
+            .tab.active {
+                flex: 2.5 !important;
+            }
+
             .tab i {
                 font-size: 1.1rem !important; /* Slightly larger icon */
                 flex-shrink: 0;
@@ -716,6 +721,10 @@
                 visibility: visible !important;
                 opacity: 1 !important;
                 color: inherit;
+                line-height: 1;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
             }
 
             /* Hide icon for active tab on mobile (Text only) */
@@ -2325,8 +2334,7 @@
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                gap: '0.5rem',
-                                flex: 1
+                                gap: '0.5rem'
                             }}
                         >
                             <i className={getIconClass(tab)}></i>
@@ -3070,7 +3078,7 @@
                         );
                     case 'audit':
                         return (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '1rem' : '0.75rem' }}>
                                 {[
                                     { action: 'System Login', user: 'Admin', time: '10 mins ago', icon: 'fa-user' },
                                     { action: 'Firewall Rules Updated', user: 'System', time: '2 hours ago', icon: 'fa-shield-halved' },
@@ -3078,13 +3086,38 @@
                                     { action: 'Password Changed', user: 'Admin', time: '3 days ago', icon: 'fa-key' },
                                     { action: 'New Device Connected', user: 'System', time: '5 days ago', icon: 'fa-link' }
                                 ].map((item, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem', borderBottom: '1px solid #f3f4f6' }}>
-                                        <div style={{ width: '32px', height: '32px', background: '#f3f4f6', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
-                                            <i className={`fa-solid ${item.icon}`}></i>
+                                    <div key={i} style={{ 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        gap: '1rem', 
+                                        padding: isMobile ? '1rem' : '0.75rem', 
+                                        borderBottom: isMobile ? 'none' : '1px solid #f3f4f6',
+                                        background: isMobile ? '#f9fafb' : 'transparent',
+                                        borderRadius: isMobile ? '12px' : '0'
+                                    }}>
+                                        <div style={{ 
+                                            width: isMobile ? '40px' : '32px', 
+                                            height: isMobile ? '40px' : '32px', 
+                                            background: isMobile ? '#ffffff' : '#f3f4f6', 
+                                            borderRadius: '8px', 
+                                            display: 'flex', 
+                                            alignItems: 'center', 
+                                            justifyContent: 'center', 
+                                            color: '#6b7280',
+                                            flexShrink: 0,
+                                            boxShadow: isMobile ? '0 1px 2px rgba(0,0,0,0.05)' : 'none'
+                                        }}>
+                                            <i className={`fa-solid ${item.icon}`} style={{ fontSize: isMobile ? '1.1rem' : '0.9rem' }}></i>
                                         </div>
-                                        <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: 500 }}>{item.action}</div>
-                                            <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>{item.user} • {item.time}</div>
+                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                            <div style={{ fontWeight: 600, fontSize: isMobile ? '0.95rem' : '1rem', marginBottom: isMobile ? '0.25rem' : '0', color: '#1f2937' }}>{item.action}</div>
+                                            <div style={{ fontSize: '0.8rem', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                <span style={{ background: isMobile ? '#e5e7eb' : 'transparent', padding: isMobile ? '2px 8px' : '0', borderRadius: '4px', fontSize: '0.75rem', fontWeight: isMobile ? '600' : '400', color: isMobile ? '#374151' : '#6b7280' }}>
+                                                    {item.user}
+                                                </span>
+                                                <span style={{ width: '3px', height: '3px', background: '#9ca3af', borderRadius: '50%', display: isMobile ? 'none' : 'block' }}></span>
+                                                <span>{item.time}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -3460,7 +3493,10 @@
                                                             {device.ai.desc}
                                                         </div>
                                                     </div>
-                                                    <button className="optimize-btn">
+                                                    <button 
+                                                        className="optimize-btn"
+                                                        onClick={() => handleStatusChange('Ai - Data Optimizing')}
+                                                    >
                                                         Optimize Now <i className="fa-solid fa-bolt"></i>
                                                     </button>
                                                 </div>
@@ -3606,7 +3642,11 @@
                                                         {device.ai.desc}
                                                     </div>
                                                 </div>
-                                                <button className="optimize-btn" style={{ maxWidth: '200px' }}>
+                                                <button 
+                                                    className="optimize-btn" 
+                                                    style={{ maxWidth: '200px' }}
+                                                    onClick={() => handleStatusChange('Ai - Monitoring')}
+                                                >
                                                     Apply Fix <i className="fa-solid fa-bolt"></i>
                                                 </button>
                                             </div>
